@@ -14,12 +14,14 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Create admin user
-        $admin = User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@toyshop.com',
-            'password' => Hash::make('password'),
-        ]);
+        // Create admin user (use updateOrCreate to avoid duplicates)
+        $admin = User::updateOrCreate(
+            ['email' => 'admin@toyshop.com'],
+            [
+                'name' => 'Admin',
+                'password' => Hash::make('password'),
+            ]
+        );
 
         // Create categories
         $categories = [
