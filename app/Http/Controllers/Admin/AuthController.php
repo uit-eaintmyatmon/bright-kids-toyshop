@@ -23,6 +23,18 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
+        // DEMO: Hardcoded login (remove in production!)
+        if ($request->email === 'admin@toyshop.com' && $request->password === 'password') {
+            // Create or get admin user
+            $admin = \App\Models\User::firstOrCreate(
+                ['email' => 'admin@toyshop.com'],
+                ['name' => 'Admin', 'password' => bcrypt('password')]
+            );
+            Auth::login($admin, $request->boolean('remember'));
+            $request->session()->regenerate();
+            return redirect()->intended(route('admin.toys.index'));
+        }
+
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
             return redirect()->intended(route('admin.toys.index'));
